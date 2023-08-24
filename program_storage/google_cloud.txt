@@ -1,0 +1,25 @@
+import { Storage } from "@google-cloud/storage";
+import path from "path";
+
+const keyFilename = './service_account.json'
+const bucketName = 'car_market'
+
+const storage =  new Storage({keyFilename})
+
+async function uploadFile() {
+  try {
+    // Replace with the path to the local file you want to upload
+    const localFilePath = './assets/korreng_3.jpg';
+    const destination = 'cars/'; // The destination path in the bucket
+
+    const uploadResponse = await storage.bucket(bucketName).upload(localFilePath, {
+      destination: path.join(destination, path.basename(localFilePath)),
+    });
+
+    console.log(`File ${localFilePath} uploaded to ${bucketName}/${uploadResponse[0].name}`);
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+}
+
+uploadFile();
